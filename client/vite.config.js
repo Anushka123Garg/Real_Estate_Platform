@@ -20,6 +20,13 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['source-map-js', 'fs'],
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: '/src/main.jsx',
+      },
+    },
+  },
   
   plugins: [react()],
 })
