@@ -19,7 +19,6 @@ mongoose.connect(process.env.MONGO).then(() => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname= path.dirname(__filename);
 
-
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
@@ -31,9 +30,9 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
-app.use(express.static(path.join(__dirname, 'client','dist')));
+app.use(express.static(path.join(__dirname, '../client')));
 app.get('*', (req,res) => {
-    res.sendFile(path.join(__dirname, 'client','dist','index.html'));
+    res.sendFile(path.join(__dirname, '../client', 'index.html'));
 })
 
 //middleware
