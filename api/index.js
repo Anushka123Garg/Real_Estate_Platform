@@ -7,7 +7,6 @@ import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -16,24 +15,30 @@ mongoose.connect(process.env.MONGO).then(() => {
     }).catch ((err) => {
         console.log(err);
     });
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname= path.dirname(__filename);
+
+const __dirname= path.resolve();
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname, 'client','dist', 'index.html'));
+})
 
 app.use(express.json());  //allow the JSON as input to server, otherwise undefined will come
 app.use(cookieParser());  //for getting info from  cookie
 
+app.listen(3000, () => {
+    console.log('Server is running on port 3000!!!');
+}
+);
+
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
-
-app.use(express.static(path.join(__dirname, '../client')));
-app.get('*', (req,res) => {
-    res.sendFile(path.join(__dirname, '../client', 'index.html'));
-})
 
 //middleware
 app.use((err, req, res, next) => {
@@ -46,7 +51,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000!!!');
-}
-);
+
